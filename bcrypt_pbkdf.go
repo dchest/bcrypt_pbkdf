@@ -9,6 +9,11 @@ package bcrypt_pbkdf
 import (
 	"crypto/sha512"
 	"errors"
+
+	// NOTE! Requires blowfish package version from Aug 1, 2014 or later.
+	// Will produce incorrect results if the package is older.
+	// See commit message for details: http://goo.gl/wx6g8O
+	"code.google.com/p/go.crypto/blowfish"
 )
 
 // Key derives a key from the password, salt and rounds count, returning a
@@ -71,29 +76,22 @@ func Key(password, salt []byte, rounds, keyLen int) ([]byte, error) {
 var magic = []byte("OxychromaticBlowfishSwatDynamite")
 
 func bcryptHash(out, shapass, shasalt []byte) {
-	var c cipher
-	initCipher(&c)
-	expandKeyWithSalt(shapass, shasalt, &c)
+	c, err := blowfish.NewSaltedCipher(shapass, shasalt)
+	if err != nil {
+		panic(err)
+	}
 	for i := 0; i < 64; i++ {
-		expandKey(shasalt, &c)
-		expandKey(shapass, &c)
+		blowfish.ExpandKey(shasalt, c)
+		blowfish.ExpandKey(shapass, c)
 	}
-	var ct [8]uint32
-	j := 0
-	for i := range ct {
-		ct[i] = getWord(magic, &j)
-	}
-	for i := 0; i < 8; i += 2 {
-		l, r := ct[i], ct[i+1]
+	copy(out[:], magic)
+	for i := 0; i < 32; i += 8 {
 		for j := 0; j < 64; j++ {
-			l, r = encryptBlock(l, r, &c)
+			c.Encrypt(out[i:i+8], out[i:i+8])
 		}
-		ct[i], ct[i+1] = l, r
 	}
-	for i, v := range ct {
-		out[4*i+3] = byte(v >> 24)
-		out[4*i+2] = byte(v >> 16)
-		out[4*i+1] = byte(v >> 8)
-		out[4*i+0] = byte(v)
+	// Swap bytes due to different endianness.
+	for i := 0; i < 32; i += 4 {
+		out[i+3], out[i+2], out[i+1], out[i] = out[i], out[i+1], out[i+2], out[i+3]
 	}
 }
