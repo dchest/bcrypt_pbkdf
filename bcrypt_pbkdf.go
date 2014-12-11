@@ -13,7 +13,7 @@ import (
 	// NOTE! Requires blowfish package version from Aug 1, 2014 or later.
 	// Will produce incorrect results if the package is older.
 	// See commit message for details: http://goo.gl/wx6g8O
-	"code.google.com/p/go.crypto/blowfish"
+	"golang.org/x/crypto/blowfish"
 )
 
 // Key derives a key from the password, salt and rounds count, returning a
