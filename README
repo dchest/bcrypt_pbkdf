@@ -18,4 +18,4 @@ USAGE
 REFERENCES
 
 * http://www.tedunangst.com/flak/post/bcrypt-pbkdf
-* http://www.openbsd.org/cgi-bin/cvsweb/src/lib/libutil/bcrypt_pbkdf.c
+* http://cvsweb.openbsd.org/cgi-bin/cvsweb/src/lib/libutil/bcrypt_pbkdf.c
