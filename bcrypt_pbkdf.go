@@ -55,13 +55,13 @@ func Key(password, salt []byte, rounds, keyLen int) ([]byte, error) {
 		cnt[2] = byte(block >> 8)
 		cnt[3] = byte(block)
 		h.Write(cnt[:])
-		bcryptHash(tmp[:], shapass[:], h.Sum(shasalt[:0]))
-		copy(out[:], tmp[:])
+		bcryptHash(&tmp, shapass[:], h.Sum(shasalt[:0]))
+		out = tmp
 
 		for i := 2; i <= rounds; i++ {
 			h.Reset()
 			h.Write(tmp[:])
-			bcryptHash(tmp[:], shapass[:], h.Sum(shasalt[:0]))
+			bcryptHash(&tmp, shapass[:], h.Sum(shasalt[:0]))
 			for j := range len(out) {
 				out[j] ^= tmp[j]
 			}
@@ -74,9 +74,9 @@ func Key(password, salt []byte, rounds, keyLen int) ([]byte, error) {
 	return key[:keyLen], nil
 }
 
-var magic = []byte("OxychromaticBlowfishSwatDynamite")
+const magic = "OxychromaticBlowfishSwatDynamite"
 
-func bcryptHash(out, shapass, shasalt []byte) {
+func bcryptHash(out *[32]byte, shapass, shasalt []byte) {
 	c, err := blowfish.NewSaltedCipher(shapass, shasalt)
 	if err != nil {
 		panic(err)
