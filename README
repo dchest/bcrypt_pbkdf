@@ -17,5 +17,5 @@ USAGE
 
 REFERENCES
 
-* http://www.tedunangst.com/flak/post/bcrypt-pbkdf
-* http://cvsweb.openbsd.org/cgi-bin/cvsweb/src/lib/libutil/bcrypt_pbkdf.c
+* https://web.archive.org/web/20250118034057/https://flak.tedunangst.com/post/bcrypt-pbkdf
+* https://cvsweb.openbsd.org/log/src/lib/libutil/bcrypt_pbkdf.c
