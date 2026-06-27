@@ -31,10 +31,10 @@ func Key(password, salt []byte, rounds, keyLen int) ([]byte, error) {
 		return nil, errors.New("bcrypt_pbkdf: empty password")
 	}
 	if len(salt) == 0 || len(salt) > 1<<20 {
-		return nil, errors.New("bcrypt_pbkdf: bad salt length")
+		return nil, errors.New("bcrypt_pbkdf: invalid salt length")
 	}
-	if keyLen > 1024 {
-		return nil, errors.New("bcrypt_pbkdf: keyLen is too large")
+	if keyLen <= 0 || keyLen > 1024 {
+		return nil, errors.New("bcrypt_pbkdf: invalid keyLen")
 	}
 	var shapass, shasalt [sha512.Size]byte
 	var out, tmp [32]byte

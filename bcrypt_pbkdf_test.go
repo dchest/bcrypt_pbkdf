@@ -69,6 +69,17 @@ func TestKey(t *testing.T) {
 	}
 }
 
+func TestKeyLen(t *testing.T) {
+	_, err := Key([]byte("password"), []byte("salt"), 1, -1)
+	if err == nil {
+		t.Fatalf("accepted negative keyLen")
+	}
+	_, err = Key([]byte("password"), []byte("salt"), 1, 0)
+	if err == nil {
+		t.Fatalf("accepted zero keyLen")
+	}
+}
+
 func TestBcryptHash(t *testing.T) {
 	good := []byte{
 		0x87, 0x90, 0x48, 0x70, 0xee, 0xf9, 0xde, 0xdd, 0xf8, 0xe7,
