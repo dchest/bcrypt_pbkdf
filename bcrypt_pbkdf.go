@@ -12,7 +12,8 @@ import (
 
 	// NOTE! Requires blowfish package version from Aug 1, 2014 or later.
 	// Will produce incorrect results if the package is older.
-	// See commit message for details: http://goo.gl/wx6g8O
+	// See commit message for details:
+	// https://github.com/golang/crypto/commit/b7f382b979dc349948b0e69fbbf7fb2a7ef6b7d9
 	"golang.org/x/crypto/blowfish"
 )
 
